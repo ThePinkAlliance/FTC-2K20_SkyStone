@@ -10,7 +10,8 @@ public abstract class Subsystem extends Teleop {
     static double back_left_wheel_command;
     static double front_right_wheel_command;
     static double back_right_wheel_command;
-    static double collect_command;
+    static double collect_command_right;
+    static double collect_command_left;
     public static double collector_rotate_command;
     static double extend_command;
     static double lift_command;
@@ -30,10 +31,9 @@ public abstract class Subsystem extends Teleop {
         robot.rightB_drive.setPower(Subsystem.back_right_wheel_command);
         robot.leftF_drive.setPower(Subsystem.front_left_wheel_command);
         robot.leftB_drive.setPower(Subsystem.back_left_wheel_command);
-        robot.collect.setPower(Subsystem.collect_command);
+        robot.collect_right.setPower(Subsystem.collect_command_right);
+        robot.collect_left.setPower(Subsystem.collect_command_left);
         robot.collector_rotate.setPower(Subsystem.collector_rotate_command);
-        robot.right_extend.setPower(extend_command);
-        robot.left_extend.setPower(extend_command);
         robot.right_lift.setPower(lift_command);
         robot.left_lift.setPower(lift_command);
     }

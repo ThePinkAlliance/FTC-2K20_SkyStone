@@ -36,7 +36,7 @@ public class Teleop extends Controls {
     // Code to Run Constantly After the Drivers Press Play and Before They Press Stop
     public void loop() {
         // Drive Train Control TODO Controls for Joysticks
-        Base.drive_by_command(-gamepad1.right_stick_y, -gamepad1.left_stick_y, -gamepad1.right_stick_y, -gamepad1.left_stick_y);
+        Base.drive_by_command(false,-gamepad1.right_stick_y, -gamepad1.left_stick_y, -gamepad1.right_stick_y, -gamepad1.left_stick_y);
 
         // Collector Controls
         if (base_y(false)) {
@@ -64,7 +64,7 @@ public class Teleop extends Controls {
         } else if (tower_y(false)) {
             Lift.lift_to_position(Presets.LIFT_MAX_POSITION);
         } else if (tower_a(false)) {
-            Lift.lift_to_position(Presets.LIFT_CLEAR_POSITION);
+            Lift.lift_to_position(Presets.LIFT_STOW_POSITION);
         } else {
             Lift.lift_stop();
         }
@@ -89,12 +89,11 @@ public class Teleop extends Controls {
                 telemetry.addData("Base Right Power: ", Subsystem.robot.rightB_drive.getPower());
                 telemetry.addData("Base Left Power: ", Subsystem.robot.leftF_drive.getPower());
                 telemetry.addData("Base Left Power: ", Subsystem.robot.leftB_drive.getPower());
-                telemetry.addData("Collector Power: ", Subsystem.robot.collect.getPower());
+                telemetry.addData("Collector Power: ", Subsystem.robot.collect_left.getPower());
+                telemetry.addData("Collector Power: ", Subsystem.robot.collect_right.getPower());
                 telemetry.addData("Collector Rotate Power: ", Subsystem.robot.collector_rotate.getPower());
                 telemetry.addData("Lift Power: ", Subsystem.robot.right_lift.getPower());
                 telemetry.addData("Tower Right Rotate Power: ", Subsystem.robot.scorer_rotate.getPosition());
-                telemetry.addData("Right Extend Power: ", Subsystem.robot.right_extend.getPower());
-                telemetry.addData("Left Extend Power: ", Subsystem.robot.left_extend.getPower());
                 telemetry.addData("Positions: ", "");
                 telemetry.addData("Base Right Position: ", Subsystem.robot.rightF_drive.getCurrentPosition());
                 telemetry.addData("Base Right Position: ", Subsystem.robot.rightB_drive.getCurrentPosition());
@@ -102,8 +101,6 @@ public class Teleop extends Controls {
                 telemetry.addData("Base Left Position: ", Subsystem.robot.leftB_drive.getCurrentPosition());
                 telemetry.addData("Lift Position: ", Subsystem.robot.right_lift.getCurrentPosition());
                 telemetry.addData("Collector Rotate Position: ", Subsystem.robot.collector_rotate.getCurrentPosition());
-                telemetry.addData("Flap Target Position: ", Subsystem.robot.score_flap.getPosition());
-                telemetry.addData("Right Extend Position: ", Subsystem.robot.right_extend.getCurrentPosition());
 //            telemetry.addData("Left Extend Position: ", Subsystem.robot.left_extend.getCurrentPosition());
                 telemetry.update();
             } else {

@@ -18,6 +18,7 @@ import static org.firstinspires.ftc.PinkCode.OpModes.Auto.center_auto.center_ini
 import static org.firstinspires.ftc.PinkCode.OpModes.Auto.center_auto.center_stop;
 import static org.firstinspires.ftc.PinkCode.OpModes.Auto.center_auto.move_to_build_site;
 import static org.firstinspires.ftc.PinkCode.OpModes.Auto.center_auto.grab_block;
+import static org.firstinspires.ftc.PinkCode.OpModes.Auto.center_auto.move_to_build_site2;
 
 // Class for the Autonomous Period of the Game Calling Methods from Subsystems in Sequence
 @Autonomous(name="Auto", group="Autonomous")
@@ -70,7 +71,7 @@ public class Auto extends OpMode{
                 break;
 
             case move_to_build_site:
-                Base.drive_by_command(1,1,1,1);
+                Base.drive_by_command(false, 1,1,1,1);
                 if((runtime.milliseconds() - markedTime) > 3000)
                 {
                     center_auto = center_stop;
@@ -81,7 +82,7 @@ public class Auto extends OpMode{
                     center_auto = move_to_build_site;
                 }
             case move_to_block:
-                Base.drive_by_command(-1,-1,-1,-1);
+                Base.drive_by_command(false, -1,-1,-1,-1);
                 if(skyDetected)
                 {
                     markedTime = runtime.milliseconds();
@@ -89,18 +90,30 @@ public class Auto extends OpMode{
                 }
                 else
                 {
-                    Base.drive_by_command(-1,-1,-1,-1);
+                    Base.drive_by_command(false,-1,-1,-1,-1);
                 }
 
             case grab_block:
                 Collector.collect();
                 if((runtime.milliseconds() - markedTime) > 3000)
                 {
-                    center_auto = center_stop;
+                    markedTime = runtime.milliseconds();
+                    center_auto = move_to_build_site2;
                 }
                 else
                 {
                     center_auto = grab_block;
+                }
+
+            case move_to_build_site2:
+                Base.drive_by_command(false,1,1,1,1);
+                if((runtime.milliseconds() - markedTime) > 3000)
+                {
+                    center_auto = center_stop;
+                }
+                else
+                {
+                    center_auto = move_to_build_site2;
                 }
 
             case center_stop:  // Lower the collector bucket to start teleop at zero = down
