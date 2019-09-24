@@ -35,8 +35,19 @@ public class Teleop extends Controls {
 
     // Code to Run Constantly After the Drivers Press Play and Before They Press Stop
     public void loop() {
-        // Drive Train Control TODO Controls for Joysticks
-        Base.drive_by_command(false,-gamepad1.right_stick_y, -gamepad1.left_stick_y, -gamepad1.right_stick_y, -gamepad1.left_stick_y);
+        // Drive Train Control
+        if(gamepad1.left_stick_x > .1)
+            Base.drive_by_command(true, gamepad1.left_stick_x, gamepad1.left_stick_x, gamepad1.left_stick_x, gamepad1.left_stick_x);
+        else if(gamepad1.left_stick_x < -.1)
+            Base.drive_by_command(true, -gamepad1.left_stick_x, -gamepad1.left_stick_x, -gamepad1.left_stick_x, -gamepad1.left_stick_x);
+        else if(gamepad1.left_stick_y > .1)
+            Base.drive_by_command(false, gamepad1.left_stick_y, gamepad1.left_stick_y, gamepad1.left_stick_y, gamepad1.left_stick_y);
+        else if(gamepad1.left_stick_y < -.1)
+            Base.drive_by_command(false, -gamepad1.left_stick_y, -gamepad1.left_stick_y, -gamepad1.left_stick_y, -gamepad1.left_stick_y);
+        else if(gamepad1.right_stick_y > .1)
+            Base.drive_by_command(false, gamepad1.right_stick_y, gamepad1.right_stick_y, -gamepad1.right_stick_y, -gamepad1.right_stick_y);
+        else if(gamepad1.right_stick_y < -.1)
+            Base.drive_by_command(false, -gamepad1.right_stick_y, -gamepad1.right_stick_y, gamepad1.right_stick_y, gamepad1.right_stick_y);
 
         // Collector Controls
         if (base_y(false)) {
