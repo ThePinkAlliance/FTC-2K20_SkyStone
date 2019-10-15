@@ -18,4 +18,6 @@ public abstract class Presets {
     //Scorer Presets
     public static final double SCORER_STOW = 0;
     public static final double SCORER_SCORE_POSITION = 1;
+    public static final double SCORER_COLLECT = 1;
+    public static final double SCORER_EJECT = 0;
 }

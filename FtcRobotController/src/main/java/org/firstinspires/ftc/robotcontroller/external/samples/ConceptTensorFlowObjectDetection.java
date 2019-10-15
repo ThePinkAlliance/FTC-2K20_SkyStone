@@ -50,7 +50,6 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * is explained below.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
-@Disabled
 public class ConceptTensorFlowObjectDetection extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
@@ -68,8 +67,8 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
      * Once you've obtained a license key, copy the string from the Vuforia web site
      * and paste it in to your code on the next line, between the double quotes.
      */
-    private static final String VUFORIA_KEY =
-            " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+
+    public static final String VUFORIA_KEY = "AZymQ7n/////AAABmVrX1h5U3UoOhrRY1O6zdyUGVeStimMppG6YJFsyCvQDGbzqnu2dxNMEarVO7uLzoP83tgzSKFDYqdE9CqAt7soxpch9vJ69ejoiRAfIMNOIC2pQJq4MJC6/yUWDaT4vvX9iH1+D/nJU/w05BoCyi4r3Y0T72/EBRyU8QroDic787nBW9QQUHc7ZZ4ysBPP/9aZgd6fczoQSpNKv5k6lgp9Fay6gWqhgvvVrzBZBkmFd1Z0VXItXn56jcMPjSunIazwgc6/XiwQyEmmuyadubnzDcGUfYZNVJFfLxzz8M0c+qsqNY/a6KJBFszsy2MLht9evY4fGimNomgsWeny3iRHN07gY7JIZ6RPX/976ny3g";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia

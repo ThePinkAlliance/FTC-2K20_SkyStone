@@ -8,10 +8,9 @@ public abstract class Scorer extends Subsystem {
         score_target_position = position;
     }
 
-    // Method for Rotating the Scoring Bucket Using Commands
-    public static void score_rotate_by_command(double command) {
-        // Define Commands
-        score_target_position = command;
+    public static void score_collect(double position)
+    {
+        score_collect_position = position;
     }
 
 }
