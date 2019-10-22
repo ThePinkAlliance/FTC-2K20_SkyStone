@@ -12,5 +12,4 @@ public abstract class Scorer extends Subsystem {
     {
         score_collect_position = position;
     }
-
 }

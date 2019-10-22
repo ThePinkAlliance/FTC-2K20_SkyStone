@@ -74,6 +74,8 @@ public class Auto extends OpMode{
     private float phoneYRotate    = 0;
     private float phoneZRotate    = 0;
 
+    public boolean leftSide = false;
+    public boolean redAlliance = false;
     // Set Up Center Auto Case Statement
     static int phase = 0;
     public center_auto center_auto;
@@ -88,9 +90,6 @@ public class Auto extends OpMode{
         move_to_build_site3,
         place_block,
         center_stop,
-
-
-
     }
 
     @Override
@@ -113,6 +112,23 @@ public class Auto extends OpMode{
         Subsystem.robot.leftB_drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         center_auto = center_initialize;
     }
+    @Override
+    public void init_loop()
+    {
+        if(gamepad1.x)
+            redAlliance = false;
+        else if(gamepad1.b)
+            redAlliance = true;
+        else if(gamepad1.a)
+            leftSide = false;
+        else if(gamepad1.y)
+            leftSide = true;
+        else {
+            leftSide = false;
+            redAlliance = false;
+        }
+    }
+    @Override
     public void loop() {
         // Center Auto Switch Statement
         telemetry.addData("Auto Phase: ", phase);
