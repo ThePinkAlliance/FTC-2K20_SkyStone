@@ -24,7 +24,7 @@ public abstract class PD {
         double motorCmd;
 
         motorCmd = (Kp * error) - (Kd * currentVel);
-        //        motorCmd = Range.clip(motorCmd, -1.0, 1.0);
+//                motorCmd = Range.clip(motorCmd, -1.0, 1.0);
 
         return motorCmd;
     }

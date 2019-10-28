@@ -58,7 +58,13 @@ public abstract class Controls extends OpMode {
     public static boolean base_dpad_up;
     public static boolean base_start;
     public static boolean base_back;
-    public static boolean base_a;
+
+    public boolean base_x() {
+        return gamepad1.x;
+    }
+    public boolean base_a(){
+        return gamepad1.a;
+    }
     protected boolean base_b(boolean toggle) {
         if (toggle) {
             if (!base_b_pressed && gamepad1.b) {
@@ -92,8 +98,15 @@ public abstract class Controls extends OpMode {
     public static boolean tower_left_joystick_button;
     public static float tower_right_joystick;
     public static float tower_left_joystick;
-    public static float tower_right_trigger;
-    public static float tower_left_trigger;
+    public float tower_right_trigger(boolean toggle)
+    {
+        return gamepad2.right_trigger;
+    }
+
+    public float tower_left_trigger()
+    {
+        return gamepad2.left_trigger;
+    }
     public boolean tower_right_bumper(boolean toggle) {
         if (toggle) {
             if (!tower_right_bumper_pressed && gamepad2.right_bumper) {
@@ -200,7 +213,9 @@ public abstract class Controls extends OpMode {
             return gamepad2.b;
         }
     }
-    public boolean tower_x;
+    public boolean tower_x() {
+        return gamepad2.x;
+    }
     public boolean tower_y(boolean toggle) {
         if (toggle) {
             if (!tower_y_pressed && gamepad2.y) {

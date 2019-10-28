@@ -5,7 +5,7 @@ public class Hooks extends Subsystem {
     public static void hook_rotate_to_position(double position) {
         // Define Commands
         hook_left_target_position = position;
-        hook_right_target_position = -position;
+        hook_right_target_position = position;
     }
 
 }

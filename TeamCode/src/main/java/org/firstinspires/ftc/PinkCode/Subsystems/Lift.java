@@ -14,7 +14,7 @@ public abstract class Lift extends Subsystem {
     public static void lift_to_position(double position) {
         // Define Commands
         lift_target_position = position;
-//        lift_hold_position = robot.right_lift.getCurrentPosition();
+        lift_hold_position = robot.right_lift.getCurrentPosition();
         lift_error = lift_target_position - lift_hold_position;
         lift_speed = lift_hold_position - previous_lift_position;
         previous_lift_position = lift_hold_position;

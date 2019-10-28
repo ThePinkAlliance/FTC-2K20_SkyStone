@@ -12,4 +12,8 @@ public abstract class Scorer extends Subsystem {
     {
         score_collect_position = position;
     }
+
+    public static void score_cap(double position) {
+        score_cap_position = position;
+    }
 }

@@ -23,7 +23,7 @@ public class Hardware {
     public Servo scorer_collect;
     public Servo left_hook;
     public Servo right_hook;
-//    public Servo capstone;
+    public Servo cap_hook;
 
     // Local OpMode Members
     private HardwareMap hwMap = null;
@@ -67,8 +67,8 @@ public class Hardware {
         leftF_drive.setDirection(DcMotor.Direction.FORWARD);
         leftB_drive.setDirection(DcMotor.Direction.FORWARD);
         collect_left.setDirection(DcMotor.Direction.FORWARD);
-        collect_right.setDirection(DcMotor.Direction.REVERSE);
-        right_lift.setDirection(DcMotor.Direction.FORWARD);
+        collect_right.setDirection(DcMotor.Direction.FORWARD);
+        right_lift.setDirection(DcMotor.Direction.REVERSE);
         left_lift.setDirection(DcMotor.Direction.FORWARD);
 
         rightF_drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -94,5 +94,6 @@ public class Hardware {
         scorer_collect = hwMap.get(Servo.class, "scorer_collect");
         left_hook = hwMap.get(Servo.class, "left_hook");
         right_hook = hwMap.get(Servo.class, "right_hook");
+        cap_hook = hwMap.get(Servo.class, "cap_hook");
     }
 }

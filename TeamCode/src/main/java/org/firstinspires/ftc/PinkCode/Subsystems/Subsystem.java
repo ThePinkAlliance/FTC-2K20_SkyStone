@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.PinkCode.Subsystems;
 
-import org.firstinspires.ftc.PinkCode.Robot.Hardware;
 import org.firstinspires.ftc.PinkCode.OpModes.Teleop;
+import org.firstinspires.ftc.PinkCode.Robot.Hardware;
+
 // Class Which Defines Variables Used in Other Subsystems and Sets Powers and Commands for Teleop/Auto
 public abstract class Subsystem extends Teleop {
     // Define Class Members
@@ -22,6 +23,7 @@ public abstract class Subsystem extends Teleop {
     static double score_collect_position;
     static double hook_left_target_position;
     static double hook_right_target_position;
+    static double score_cap_position;
 
     // Method Which Sends the Motor Powers to the Motors
     public static void set_motor_powers() {
@@ -43,6 +45,7 @@ public abstract class Subsystem extends Teleop {
         robot.scorer_collect.setPosition(score_collect_position);
         robot.left_hook.setPosition(hook_left_target_position);
         robot.right_hook.setPosition(hook_right_target_position);
+        robot.cap_hook.setPosition(score_cap_position);
     }
 
 }
