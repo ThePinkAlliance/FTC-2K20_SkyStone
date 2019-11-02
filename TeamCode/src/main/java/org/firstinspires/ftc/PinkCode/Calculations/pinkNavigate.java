@@ -21,13 +21,13 @@ public class pinkNavigate {
         double angleOffset;
         linearError = targetPosInches - currentPosInches;
         double angularError = targetAngleDeg - currentAngleDeg;
-        double motorCmd = PD.getMotorCmd(0.05, 0.1, linearError, linearSpeedInches);
+        double motorCmd = PD.getMotorCmd(0.02, 0.1, linearError, linearSpeedInches);
 
         // Determine the baseline motor speed command, but limit it to leave room for the turn offset
         motorCmd = Range.clip(motorCmd, -0.6, 0.6);
 
         // Determine and add the angle offset
-        angleOffset = PD.getMotorCmd(0.03, 0.001, angularError, 0);
+        angleOffset = PD.getMotorCmd(0.02, 0.001, angularError, 0);
         leftFMotorCmd = motorCmd - angleOffset;
         rightFMotorCmd = motorCmd + angleOffset;
         leftFMotorCmd = Range.clip(leftFMotorCmd, -1.0, 1.0);
@@ -51,14 +51,14 @@ public class pinkNavigate {
         linearError = targetPosInches - currentPosInches;
         double linearError2 = -linearError;
         double angularError = targetAngleDeg - currentAngleDeg;
-        double motorCmd = PD.getMotorCmd(0.05, 0.1, linearError, linearSpeedInches);
-        double motorCmd2 = PD.getMotorCmd(0.05, .1, linearError2, linearSpeedInches);
+        double motorCmd = PD.getMotorCmd(0.02, 0.1, linearError, linearSpeedInches); //kp .05
+        double motorCmd2 = PD.getMotorCmd(0.02, .1, linearError2, linearSpeedInches); //kp .05
 
         // Determine the baseline motor speed command, but limit it to leave room for the turn offset
         motorCmd = Range.clip(motorCmd, -0.6, 0.6);
 
         // Determine and add the angle offset
-        angleOffset = PD.getMotorCmd(0.03, 0.001, angularError, 0);
+        angleOffset = PD.getMotorCmd(0.02, 0.001, angularError, 0); //kp .03
         leftFMotorCmd = motorCmd - angleOffset;
         leftBMotorCmd = motorCmd2 - angleOffset;
         rightFMotorCmd = motorCmd2 + angleOffset;
