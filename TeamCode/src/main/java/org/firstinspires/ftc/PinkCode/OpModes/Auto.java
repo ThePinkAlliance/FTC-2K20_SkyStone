@@ -336,7 +336,7 @@ public class Auto extends OpMode {
                 currentBaseAngle = getHeading();
                 Subsystem.robot.left_lift.setPower(1);
                 Subsystem.robot.right_lift.setPower(1);
-                Subsystem.robot.scorer_rotate.setPosition(Presets.SCORER_SCORE_POSITION);
+//                Subsystem.robot.scorer_rotate.setPosition(Presets.SCORER_SCORE_POSITION);
                 if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.1) && Subsystem.robot.left_lift.getCurrentPosition() > 1200 && runtime.milliseconds() - markedTime > 3000)
                 {
                     baseScorePos = targetBasePos;
@@ -406,7 +406,7 @@ public class Auto extends OpMode {
                 targetBaseAngle = baseScoreAngle;
                 targetBasePos = baseScorePos;
                 currentBaseAngle = getHeading();
-                Subsystem.robot.scorer_rotate.setPosition(Presets.SCORER_STOW);
+//                Subsystem.robot.scorer_rotate.setPosition(Presets.SCORER_STOW);
                 if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.1) &&runtime.milliseconds() - markedTime > 3000)
                 {
                     baseScorePos = targetBasePos;

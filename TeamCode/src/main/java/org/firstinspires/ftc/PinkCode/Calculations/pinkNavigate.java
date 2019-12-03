@@ -36,6 +36,8 @@ public class pinkNavigate {
         // Limit the max motor command for gentle motion
         leftFMotorCmd = Range.clip(leftFMotorCmd, -maxPower, maxPower);
         rightFMotorCmd = Range.clip(rightFMotorCmd, -maxPower, maxPower);
+        leftBMotorCmd = Range.clip(leftBMotorCmd, -maxPower, maxPower);
+        rightBMotorCmd = Range.clip(rightBMotorCmd, -maxPower, maxPower);
 
         // True if navigated to position
         return (Math.abs(linearError) < POSITION_THRESHOLD) && (Math.abs(angleErrorDegrees) < ANGLE_THRESHOLD);

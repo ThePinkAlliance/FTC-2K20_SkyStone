@@ -3,9 +3,10 @@ package org.firstinspires.ftc.PinkCode.Subsystems;
 // Abstract Class to Define the Methods of the Extender Subsystem
 public abstract class Scorer extends Subsystem {
     // Method for Rotating the Scoring Bucket to a Position
-    public static void score_rotate_to_position(double position) {
+    public static void score_rotate_to_position(double command) {
         // Define Commands
-        score_target_position = position;
+        left_arm_command = command;
+        right_arm_command = -command;
     }
 
     public static void score_collect(double position)
