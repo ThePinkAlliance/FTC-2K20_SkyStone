@@ -17,7 +17,7 @@ import org.firstinspires.ftc.PinkCode.Robot.Controls;
 // Class for Player-Controlled Period of the Game Which Binds Controls to Subsystems
 @TeleOp(name = "Teleop", group = "Teleop")
 public class Teleop extends Controls {
-
+    double temp;
 
     // Code to Run Once When the Drivers Press Init
     public void init() {
@@ -34,7 +34,8 @@ public class Teleop extends Controls {
 
         Scorer.score_rotate_to_position(Presets.SCORER_STOW);
         Scorer.score_collect(Presets.SCORER_EJECT);
-        Hooks.hook_rotate_to_position(Presets.HOOK_UP);
+        Scorer.score_cap(Presets.CAP_STOW);
+        Hooks.hook_rotate_up_position();
         // Telemetry Update to Inform Drivers That the Program is Initialized
         telemetry.addData("Status: ", "Waiting for Driver to Press Play");
         telemetry.update();
@@ -76,16 +77,19 @@ public class Teleop extends Controls {
             Collector.collect_stop();
 
         // Lift Controls
-        if (gamepad2.left_stick_y < -.1 || gamepad2.left_stick_y > .1)
+        if (gamepad2.left_stick_y < -.1 || gamepad2.left_stick_y > .1) {
             Lift.lift_by_command(-gamepad2.left_stick_y);
-        else if (tower_y(false)) {
+            temp = Subsystem.robot.left_lift.getCurrentPosition();
+        } else if (tower_y(false)) {
             Scorer.score_collect(Presets.SCORER_COLLECT);
             Lift.lift_to_position(Presets.LIFT_MAX_POSITION);
+            temp = Subsystem.robot.left_lift.getCurrentPosition();
         }else if (tower_a(false)) {
             Lift.lift_to_position(Presets.LIFT_STOW_POSITION);
             Scorer.score_collect(Presets.SCORER_EJECT);
+            temp = Subsystem.robot.left_lift.getCurrentPosition();
         } else
-            Lift.lift_stop();
+            Lift.lift_to_position(temp);
 
 
         // Scorer Controls
@@ -104,9 +108,9 @@ public class Teleop extends Controls {
 
 
         if(base_y(false))
-            Hooks.hook_rotate_to_position(Presets.HOOK_UP);
+            Hooks.hook_rotate_down_position();
         else if(base_a())
-            Hooks.hook_rotate_to_position(Presets.HOOK_DOWN);
+            Hooks.hook_rotate_up_position();
 
         // Set Motor Powers and Servos to Their Commands
         Subsystem.set_motor_powers();

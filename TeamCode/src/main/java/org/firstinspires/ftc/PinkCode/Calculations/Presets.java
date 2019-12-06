@@ -19,9 +19,9 @@ public abstract class Presets {
     public static final double SCORER_STOW = 0;
     public static final double SCORER_SCORE_POSITION = 1;
     public static final double SCORER_COLLECT = 1;
-    public static final double SCORER_EJECT = .5;
-    public static final double CAP_EJECT = 1;
-    public static final double CAP_STOW = 0;
+    public static final double SCORER_EJECT = .3;
+    public static final double CAP_EJECT = .8;
+    public static final double CAP_STOW = .5;
 
     //Hook Presets
     public static final double HOOK_DOWN = .5;

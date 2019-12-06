@@ -204,7 +204,7 @@ public class Auto extends OpMode {
                 break;
 
             case DRIVE_FORWARD:
-                targetBasePos = baseScorePos + 32;
+                targetBasePos = baseScorePos + 15;
                 targetBaseAngle = baseScoreAngle;
                 currentBaseAngle = getHeading();  // Degrees
                 Subsystem.robot.collect_right.setPower(-1);

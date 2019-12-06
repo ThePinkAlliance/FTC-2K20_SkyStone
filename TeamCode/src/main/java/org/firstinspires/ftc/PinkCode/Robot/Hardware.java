@@ -19,8 +19,7 @@ public class Hardware {
     public DcMotor left_lift; // Port 0 Expansion Hub 2
 
 //    // Servos
-    public CRServo left_arm;
-    public CRServo right_arm;
+    public Servo scorer_rotate;
     public Servo scorer_collect;
     public Servo left_hook;
     public Servo right_hook;
@@ -91,8 +90,7 @@ public class Hardware {
         left_lift.setPower(0);
 
         // Servos
-        left_arm = hwMap.get(CRServo.class, "left_arm");
-        right_arm = hwMap.get(CRServo.class, "right_arm");
+        scorer_rotate = hwMap.get(Servo.class, "scorer_rotate");
         scorer_collect = hwMap.get(Servo.class, "scorer_collect");
         left_hook = hwMap.get(Servo.class, "left_hook");
         right_hook = hwMap.get(Servo.class, "right_hook");

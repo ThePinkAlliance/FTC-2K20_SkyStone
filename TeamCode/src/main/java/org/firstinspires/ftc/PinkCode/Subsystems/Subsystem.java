@@ -43,8 +43,7 @@ public abstract class Subsystem extends Teleop {
     // Method Which Sends the Servo Positions to the Servos
     public static void set_servo_positions() {
         // Set Servo Positions
-        robot.left_arm.setPower(left_arm_command);
-        robot.right_arm.setPower(right_arm_command);
+        robot.scorer_rotate.setPosition(score_target_position);
         robot.scorer_collect.setPosition(score_collect_position);
         robot.left_hook.setPosition(hook_left_target_position);
         robot.right_hook.setPosition(hook_right_target_position);
