@@ -19,6 +19,7 @@ import org.firstinspires.ftc.PinkCode.Robot.Controls;
 public class Teleop extends Controls {
     double temp;
 
+
     // Code to Run Once When the Drivers Press Init
     public void init() {
         // Initialization of Each Subsystem's Hardware Map
@@ -77,7 +78,10 @@ public class Teleop extends Controls {
             Collector.collect_stop();
 
         // Lift Controls
-        if (gamepad2.left_stick_y < -.1 || gamepad2.left_stick_y > .1) {
+        if (gamepad2.left_stick_y > .1) {
+            Lift.lift_by_command(-gamepad2.left_stick_y *.5);
+            temp = Subsystem.robot.left_lift.getCurrentPosition();
+        } else if(gamepad2.left_stick_y < -.1) {
             Lift.lift_by_command(-gamepad2.left_stick_y);
             temp = Subsystem.robot.left_lift.getCurrentPosition();
         } else if (tower_y(false)) {

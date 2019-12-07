@@ -274,6 +274,7 @@ public class Auto extends OpMode {
                     stage = stage.MOVE_TO_FOUNDATION;
                 }
                 break;
+
             case MOVE_TO_FOUNDATION:
                 targetBasePos = baseScorePos + 50;
                 targetBaseAngle = baseScoreAngle;

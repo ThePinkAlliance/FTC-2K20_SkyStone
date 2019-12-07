@@ -51,7 +51,6 @@ public class SkystoneDetectorExample extends LinearOpMode {
          */
         skyStoneDetector = new SkystoneDetector();
         phoneCam.setPipeline(skyStoneDetector);
-
         /*
          * Tell the camera to start streaming images to us! Note that you must make sure
          * the resolution you specify is supported by the camera. If it is not, an exception
@@ -63,7 +62,7 @@ public class SkystoneDetectorExample extends LinearOpMode {
          * For a rear facing camera or a webcam, rotation is defined assuming the camera is facing
          * away from the user.
          */
-        phoneCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+        phoneCam.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
 
         /*
          * Wait for the user to press start on the Driver Station
