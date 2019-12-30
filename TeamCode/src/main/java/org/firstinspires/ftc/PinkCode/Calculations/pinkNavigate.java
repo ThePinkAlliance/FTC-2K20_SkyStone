@@ -34,17 +34,10 @@ public class pinkNavigate {
         rightFMotorCmd = Range.clip(rightFMotorCmd, -1.0, 1.0);
 
         // Limit the max motor command for gentle motion
-        if(linearError < 10 && maxPower > .2) {
-            leftFMotorCmd = Range.clip(leftFMotorCmd, -.2, .2);
-            rightFMotorCmd = Range.clip(rightFMotorCmd, -.2, .2);
-            leftBMotorCmd = Range.clip(leftBMotorCmd, -.2, .2);
-            rightBMotorCmd = Range.clip(rightBMotorCmd, -.2, .2);
-        } else {
             leftFMotorCmd = Range.clip(leftFMotorCmd, -maxPower, maxPower);
             rightFMotorCmd = Range.clip(rightFMotorCmd, -maxPower, maxPower);
-            leftBMotorCmd = Range.clip(leftBMotorCmd, -maxPower, maxPower);
-            rightBMotorCmd = Range.clip(rightBMotorCmd, -maxPower, maxPower);
-        }
+            leftBMotorCmd = leftFMotorCmd;
+            rightBMotorCmd = rightFMotorCmd;
 
         // True if navigated to position
         return (Math.abs(linearError) < POSITION_THRESHOLD) && (Math.abs(angleErrorDegrees) < ANGLE_THRESHOLD);
@@ -78,10 +71,17 @@ public class pinkNavigate {
         rightBMotorCmd = Range.clip(rightBMotorCmd, -1.0, 1.0);
 
         // Limit the max motor command for gentle motion
-        leftFMotorCmd = Range.clip(leftFMotorCmd, -maxPower, maxPower);
-        rightFMotorCmd = Range.clip(rightFMotorCmd, -maxPower, maxPower);
-        leftBMotorCmd = Range.clip(leftBMotorCmd, -maxPower, maxPower);
-        rightBMotorCmd = Range.clip(rightBMotorCmd, -maxPower, maxPower);
+        if(linearError < 10 && maxPower > .07) {
+            leftFMotorCmd = Range.clip(leftFMotorCmd, -.07, .07);
+            rightFMotorCmd = Range.clip(rightFMotorCmd, -.07, .07);
+            leftBMotorCmd = Range.clip(leftBMotorCmd, -.07, .07);
+            rightBMotorCmd = Range.clip(rightBMotorCmd, -.07, .07);
+        } else {
+            leftFMotorCmd = Range.clip(leftFMotorCmd, -maxPower, maxPower);
+            rightFMotorCmd = Range.clip(rightFMotorCmd, -maxPower, maxPower);
+            leftBMotorCmd = Range.clip(leftBMotorCmd, -maxPower, maxPower);
+            rightBMotorCmd = Range.clip(rightBMotorCmd, -maxPower, maxPower);
+        }
 
         // True if navigated to position
         return (Math.abs(linearError) < POSITION_THRESHOLD) && (Math.abs(angleErrorDegrees) < ANGLE_THRESHOLD);

@@ -26,6 +26,8 @@ public abstract class Subsystem extends Teleop {
     static double score_cap_position;
     static double left_arm_command;
     static double right_arm_command;
+    static double scoreR_rotate_command;
+    static double scoreL_rotate_command;
 
     // Method Which Sends the Motor Powers to the Motors
     public static void set_motor_powers() {
@@ -43,7 +45,9 @@ public abstract class Subsystem extends Teleop {
     // Method Which Sends the Servo Positions to the Servos
     public static void set_servo_positions() {
         // Set Servo Positions
-        robot.scorer_rotate.setPosition(score_target_position);
+//        robot.scorer_rotate.setPosition(score_target_position);
+        robot.scorerR_rotate.setPosition(scoreR_rotate_command);
+        robot.scorerL_rotate.setPosition(scoreL_rotate_command);
         robot.scorer_collect.setPosition(score_collect_position);
         robot.left_hook.setPosition(hook_left_target_position);
         robot.right_hook.setPosition(hook_right_target_position);

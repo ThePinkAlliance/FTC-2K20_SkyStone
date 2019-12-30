@@ -33,6 +33,7 @@ public class Teleop extends Controls {
         Subsystem.robot.leftF_drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Subsystem.robot.leftB_drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+//        Scorer.score_rotate_to_position(Presets.SCORER_STOW);
         Scorer.score_rotate_to_position(Presets.SCORER_STOW);
         Scorer.score_collect(Presets.SCORER_EJECT);
         Scorer.score_cap(Presets.CAP_STOW);
@@ -92,14 +93,16 @@ public class Teleop extends Controls {
             Lift.lift_to_position(Presets.LIFT_STOW_POSITION);
             Scorer.score_collect(Presets.SCORER_EJECT);
             temp = Subsystem.robot.left_lift.getCurrentPosition();
-        } else
+        } else {
             Lift.lift_to_position(temp);
-
+        }
 
         // Scorer Controls
-        if(tower_y(false) && (Subsystem.robot.left_lift.getCurrentPosition() > Presets.LIFT_CLEAR_POSITION))
+        if(tower_y(false) && Subsystem.robot.left_lift.getCurrentPosition() > 1500)
+            Scorer.score_rotate_to_position(.6);
+        if(tower_y(false)) {
             Scorer.score_rotate_to_position(Presets.SCORER_SCORE_POSITION);
-        else if(tower_a(false) && (Subsystem.robot.left_lift.getCurrentPosition() > Presets.LIFT_CLEAR_POSITION))
+        }else if(tower_a(false))
             Scorer.score_rotate_to_position(Presets.SCORER_STOW);
         else if(tower_right_bumper(false))
             Scorer.score_collect(Presets.SCORER_COLLECT);

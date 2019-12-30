@@ -4,9 +4,8 @@ package org.firstinspires.ftc.PinkCode.Subsystems;
 public abstract class Scorer extends Subsystem {
     // Method for Rotating the Scoring Bucket to a Position
     public static void score_rotate_to_position(double position) {
-        // Define Commands
-        score_target_position = position;
-
+        scoreL_rotate_command = position;
+        scoreR_rotate_command = position;
     }
 
     public static void score_collect(double position)

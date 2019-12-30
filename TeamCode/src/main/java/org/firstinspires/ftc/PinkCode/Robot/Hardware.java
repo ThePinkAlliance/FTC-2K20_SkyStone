@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.PinkCode.Subsystems.Scorer;
+
 // Class to Define the Hardware of the Robot
 public class Hardware {
     // Motors
@@ -19,7 +21,9 @@ public class Hardware {
     public DcMotor left_lift; // Port 0 Expansion Hub 2
 
 //    // Servos
-    public Servo scorer_rotate;
+//    public Servo scorer_rotate;
+    public Servo scorerL_rotate;
+    public Servo scorerR_rotate;
     public Servo scorer_collect;
     public Servo left_hook;
     public Servo right_hook;
@@ -90,7 +94,11 @@ public class Hardware {
         left_lift.setPower(0);
 
         // Servos
-        scorer_rotate = hwMap.get(Servo.class, "scorer_rotate");
+//        scorer_rotate = hwMap.get(Servo.class, "scorer_rotate");
+        scorerL_rotate = hwMap.get(Servo.class, "scorerL_rotate");
+        scorerL_rotate.setDirection(Servo.Direction.FORWARD);
+        scorerR_rotate = hwMap.get(Servo.class, "scorerR_rotate");
+        scorerR_rotate.setDirection(Servo.Direction.REVERSE);
         scorer_collect = hwMap.get(Servo.class, "scorer_collect");
         left_hook = hwMap.get(Servo.class, "left_hook");
         right_hook = hwMap.get(Servo.class, "right_hook");

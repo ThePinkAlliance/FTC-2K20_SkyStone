@@ -3,8 +3,8 @@ package org.firstinspires.ftc.PinkCode.Calculations;
 // Abstract Class to Define Preset Values Used Throughout Subsystems
 public abstract class Presets {
     //Collector Presets
-    public static final double COLLECTOR_COLLECT_POWER = 1; // Power Sent to Motor While Collecting
-    public static final double COLLECTOR_EJECT_POWER = -.4; // Power Sent to Motor While Ejecting
+    public static final double COLLECTOR_COLLECT_POWER = .8; // Power Sent to Motor While Collecting
+    public static final double COLLECTOR_EJECT_POWER = -.2; // Power Sent to Motor While Ejecting
 
     // Lift Presets TODO: Confirm Lift Presets
     public static final double LIFT_MAX_POSITION = 1900; //Fully Raised
@@ -16,7 +16,8 @@ public abstract class Presets {
     static final double LIFT_MAX_POWER = 1; // Most Power Sent While Raising Lift
 
     //Scorer Presets
-    public static final double SCORER_STOW = 0;
+    public static final double SCORER_STOW = .38;
+    public static final double SCORER_HIGH = .8;
     public static final double SCORER_SCORE_POSITION = 1;
     public static final double SCORER_COLLECT = 1;
     public static final double SCORER_EJECT = .3;
