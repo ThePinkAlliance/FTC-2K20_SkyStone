@@ -103,5 +103,6 @@ public class Hardware {
         left_hook = hwMap.get(Servo.class, "left_hook");
         right_hook = hwMap.get(Servo.class, "right_hook");
         cap_hook = hwMap.get(Servo.class, "cap_hook");
+        cap_hook.setDirection(Servo.Direction.REVERSE);
     }
 }

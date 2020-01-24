@@ -21,7 +21,7 @@ public class pinkNavigate {
         double angleOffset;
         linearError = targetPosInches - currentPosInches;
         double angularError = targetAngleDeg - currentAngleDeg;
-        double motorCmd = PD.getMotorCmd(0.02, 0.1, linearError, linearSpeedInches);
+        double motorCmd = PD.getMotorCmd(0.02, 0.07, linearError, linearSpeedInches);
 
         // Determine the baseline motor speed command, but limit it to leave room for the turn offset
         motorCmd = Range.clip(motorCmd, -0.6, 0.6);
@@ -53,8 +53,8 @@ public class pinkNavigate {
         linearError = targetPosInches - currentPosInches;
         double linearError2 = -linearError;
         double angularError = targetAngleDeg - currentAngleDeg;
-        double motorCmd = PD.getMotorCmd(0.02, 0.1, linearError, linearSpeedInches); //kp .05
-        double motorCmd2 = PD.getMotorCmd(0.02, .1, linearError2, linearSpeedInches); //kp .05
+        double motorCmd = PD.getMotorCmd(0.01, 0.05, linearError, linearSpeedInches); //kp .05: .02 KD: .1
+        double motorCmd2 = PD.getMotorCmd(0.01, 0.05, linearError2, linearSpeedInches); //kp .05 .02 KD: .1
 
         // Determine the baseline motor speed command, but limit it to leave room for the turn offset
         motorCmd = Range.clip(motorCmd, -0.6, 0.6);
@@ -71,20 +71,26 @@ public class pinkNavigate {
         rightBMotorCmd = Range.clip(rightBMotorCmd, -1.0, 1.0);
 
         // Limit the max motor command for gentle motion
-        if(linearError < 10 && maxPower > .07) {
-            leftFMotorCmd = Range.clip(leftFMotorCmd, -.07, .07);
-            rightFMotorCmd = Range.clip(rightFMotorCmd, -.07, .07);
-            leftBMotorCmd = Range.clip(leftBMotorCmd, -.07, .07);
-            rightBMotorCmd = Range.clip(rightBMotorCmd, -.07, .07);
-        } else {
             leftFMotorCmd = Range.clip(leftFMotorCmd, -maxPower, maxPower);
             rightFMotorCmd = Range.clip(rightFMotorCmd, -maxPower, maxPower);
             leftBMotorCmd = Range.clip(leftBMotorCmd, -maxPower, maxPower);
             rightBMotorCmd = Range.clip(rightBMotorCmd, -maxPower, maxPower);
-        }
 
         // True if navigated to position
         return (Math.abs(linearError) < POSITION_THRESHOLD) && (Math.abs(angleErrorDegrees) < ANGLE_THRESHOLD);
+    }
+
+    public static double strafeByCommand(double maxPower) {
+
+        leftFMotorCmd = -maxPower;
+        leftBMotorCmd = maxPower;
+        rightFMotorCmd = maxPower;
+        rightBMotorCmd = -maxPower;
+//        leftFMotorCmd = Range.clip(leftFMotorCmd, -maxPower, maxPower);
+//        rightFMotorCmd = Range.clip(rightFMotorCmd, -maxPower, maxPower);
+//        leftBMotorCmd = Range.clip(leftBMotorCmd, -maxPower, maxPower);
+//        rightBMotorCmd = Range.clip(rightBMotorCmd, -maxPower, maxPower);
+        return leftBMotorCmd;
     }
 
     public static void stopBase ()

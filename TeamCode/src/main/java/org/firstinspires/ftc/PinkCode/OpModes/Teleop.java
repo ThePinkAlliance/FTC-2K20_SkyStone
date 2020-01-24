@@ -59,10 +59,22 @@ public class Teleop extends Controls {
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
-            final double v1 = r * Math.cos(robotAngle) + rightX;
-            final double v2 = r * Math.sin(robotAngle) + rightX;
-            final double v3 = r * Math.sin(robotAngle) - rightX;
-            final double v4 = r * Math.cos(robotAngle) - rightX;
+            double v1 = r * Math.cos(robotAngle) + rightX;
+            double v2 = r * Math.sin(robotAngle) + rightX;
+            double v3 = r * Math.sin(robotAngle) - rightX;
+            double v4 = r * Math.cos(robotAngle) - rightX;
+
+            if(gamepad1.left_stick_x > .1 || gamepad1.left_stick_x < -.1) {
+                v1 -= v1 / 7;
+                v3 -= v3 / 7;
+            }
+
+            if (Subsystem.robot.scorerL_rotate.getPosition() == Presets.SCORER_SCORE_POSITION || Subsystem.robot.scorerL_rotate.getPosition() == Presets.SCORER_HIGH) {
+                v1 *= .75;
+                v2 *= .75;
+                v3 *= .75;
+                v4 *= .75;
+            }
 
             Base.drive_by_command(false,-v1,-v2,-v3,-v4);
         }
@@ -98,9 +110,9 @@ public class Teleop extends Controls {
         }
 
         // Scorer Controls
-        if(tower_y(false) && Subsystem.robot.left_lift.getCurrentPosition() > 1500)
-            Scorer.score_rotate_to_position(.6);
-        if(tower_y(false)) {
+        if(gamepad2.x)
+            Scorer.score_rotate_to_position(Presets.SCORER_HIGH);
+        if(gamepad2.y) {
             Scorer.score_rotate_to_position(Presets.SCORER_SCORE_POSITION);
         }else if(tower_a(false))
             Scorer.score_rotate_to_position(Presets.SCORER_STOW);
