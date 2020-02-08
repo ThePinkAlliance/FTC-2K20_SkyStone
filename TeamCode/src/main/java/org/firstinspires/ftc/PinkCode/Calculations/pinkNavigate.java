@@ -5,6 +5,7 @@ import org.firstinspires.ftc.PinkCode.Robot.Hardware;
 
 public class pinkNavigate {
     static final double COUNTS_PER_INCH = 24.9; // Counts Previous 49.8
+    static final double STRAFE_COUNTS_PER_INCH = 31.1;
     static final double POSITION_THRESHOLD = 1.0;   // Base travel
     static final double ANGLE_THRESHOLD = 4.0;     // Degrees
     Hardware robot;
@@ -47,14 +48,14 @@ public class pinkNavigate {
                                       double linearSpeedCounts, double maxPower)
     {
         double angleErrorDegrees = targetAngleDeg - currentAngleDeg;
-        double currentPosInches = (currentBasePosCounts / COUNTS_PER_INCH);
-        double linearSpeedInches = linearSpeedCounts / COUNTS_PER_INCH;
+        double currentPosInches = (currentBasePosCounts / STRAFE_COUNTS_PER_INCH);
+        double linearSpeedInches = linearSpeedCounts / STRAFE_COUNTS_PER_INCH;
         double angleOffset;
         linearError = targetPosInches - currentPosInches;
         double linearError2 = -linearError;
         double angularError = targetAngleDeg - currentAngleDeg;
-        double motorCmd = PD.getMotorCmd(0.01, 0.05, linearError, linearSpeedInches); //kp .05: .02 KD: .1
-        double motorCmd2 = PD.getMotorCmd(0.01, 0.05, linearError2, linearSpeedInches); //kp .05 .02 KD: .1
+        double motorCmd = PD.getMotorCmd(0.05, 0.1, linearError, linearSpeedInches); //kp .05: .02 KD: .1
+        double motorCmd2 = PD.getMotorCmd(0.05, 0.1, linearError2, linearSpeedInches); //kp .05 .02 KD: .1
 
         // Determine the baseline motor speed command, but limit it to leave room for the turn offset
         motorCmd = Range.clip(motorCmd, -0.6, 0.6);

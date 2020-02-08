@@ -53,6 +53,8 @@ import java.util.Locale;
 
 @Autonomous (name = "Pink Auto")
 public class Auto2 extends OpMode {
+    private double previousHeading = 0;
+    private double integratedHeading = 0;
     private int BackTemp = 0;
     private int temp = 0;
     private int tempAngle = 0;
@@ -79,6 +81,11 @@ public class Auto2 extends OpMode {
 
 
     double speed;
+    double rightFWheelPos;
+    double rightBWheelPos;
+    double leftFWheelPos;
+    double leftBWheelPos;
+    double currentStrafeBasePos;
 
     private Hardware robot = new Hardware();
     private BNO055IMU imu;
@@ -134,6 +141,10 @@ public class Auto2 extends OpMode {
         BACKUP2,
         COLLECT_STONE2,
         BRING_CUBE,
+        SPIT_CUBE,
+        RELEASE_CUBE,
+        BIGBOY_TURNS,
+        PARK2,
         STOP
     }
 
@@ -254,6 +265,10 @@ public class Auto2 extends OpMode {
         leftWheelPos = robot.leftF_drive.getCurrentPosition();
         rightWheelPos = robot.rightF_drive.getCurrentPosition();
         double currentBasePos = (leftWheelPos + rightWheelPos) / 2.0;
+        rightFWheelPos = robot.rightF_drive.getCurrentPosition();
+        rightBWheelPos = robot.rightB_drive.getCurrentPosition();
+        leftBWheelPos = robot.leftB_drive.getCurrentPosition();
+        leftFWheelPos = robot.leftF_drive.getCurrentPosition();
         linearBaseSpeed = currentBasePos - previousBasePos;
         previousBasePos = currentBasePos;
         telemetry.addData("Values", valLeft+"   "+valMid+"   "+valRight);
@@ -287,7 +302,7 @@ public class Auto2 extends OpMode {
                 phoneCam.pauseViewport();
                 targetBasePos = baseScorePos + 15;
                 targetBaseAngle = baseScoreAngle;
-                currentBaseAngle = getHeading();  // Degrees
+                currentBaseAngle = getIntegratedHeading();  // Degrees
                 Subsystem.robot.collect_right.setPower(-1);
                 Subsystem.robot.collect_left.setPower(1);
                 if (pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25)) {
@@ -314,11 +329,11 @@ public class Auto2 extends OpMode {
                     targetBaseAngle = baseScoreAngle + 30;
                 } else {
                     targetBasePos = baseScorePos + 30;
-                    targetBaseAngle = baseScoreAngle + 30;
+                    targetBaseAngle = baseScoreAngle + 25;
                 }
                 Subsystem.robot.scorerL_rotate.setPosition(Presets.SCORER_STOW);
                 Subsystem.robot.scorerR_rotate.setPosition(Presets.SCORER_STOW);
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 Subsystem.robot.collect_right.setPower(-1);
                 Subsystem.robot.collect_left.setPower(1);
                 if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.25) && runtime.milliseconds() - markedTime > 2000)
@@ -329,11 +344,11 @@ public class Auto2 extends OpMode {
                     Subsystem.robot.collect_left.setPower(0);
                     markedTime = runtime.milliseconds();
                     if(blueAlliance) {
-                        temp = 78;
+                        temp = 79;
                     } else {
                         temp = 73;
                     }
-                    BackTemp = 24;
+                    BackTemp = 23;
                     if(blueAlliance)
                         tempAngle = 57;
                     else
@@ -345,13 +360,13 @@ public class Auto2 extends OpMode {
 
             case SKY2:
                 if(blueAlliance) {
-                    targetBasePos = baseScorePos + 30;
+                    targetBasePos = baseScorePos + 32;
                     targetBaseAngle = baseScoreAngle + 20;
                 } else {
                     targetBasePos = baseScorePos + 30;
                     targetBaseAngle = baseScoreAngle + 10;
                 }
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 Subsystem.robot.scorerL_rotate.setPosition(Presets.SCORER_STOW);
                 Subsystem.robot.scorerR_rotate.setPosition(Presets.SCORER_STOW);
                 Subsystem.robot.collect_right.setPower(-1);
@@ -364,7 +379,7 @@ public class Auto2 extends OpMode {
                     Subsystem.robot.collect_left.setPower(0);
                     markedTime = runtime.milliseconds();
                     if(blueAlliance) {
-                        temp = 75;
+                        temp = 78;
                     } else {
                         temp = 70;
                     }
@@ -385,7 +400,7 @@ public class Auto2 extends OpMode {
                     targetBasePos = baseScorePos + 25;
                     targetBaseAngle = baseScoreAngle - 15;
                 }
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 Subsystem.robot.scorerL_rotate.setPosition(Presets.SCORER_STOW);
                 Subsystem.robot.scorerR_rotate.setPosition(Presets.SCORER_STOW);
                 Subsystem.robot.collect_right.setPower(-1);
@@ -396,11 +411,11 @@ public class Auto2 extends OpMode {
                     baseScoreAngle = targetBaseAngle;
                     markedTime = runtime.milliseconds();
                     if(blueAlliance) {
-                        temp = 77;
+                        temp = 80;
                     } else {
                         temp = 72;
                     }
-                    BackTemp = 20;
+                    BackTemp = 17;
                     if(blueAlliance)
                         tempAngle = 97;
                     else
@@ -411,7 +426,7 @@ public class Auto2 extends OpMode {
 
             case SCORER_COLLECT:
                 pinkNavigate.stopBase();
-                if(runtime.milliseconds() - markedTime > 500)
+                if(runtime.milliseconds() - markedTime > 200)
                 {
                     Subsystem.robot.collect_right.setPower(0);
                     Subsystem.robot.collect_left.setPower(0);
@@ -423,11 +438,12 @@ public class Auto2 extends OpMode {
                 break;
 
             case DRIVE_BACKWARD:
+                Subsystem.robot.scorer_collect.setPosition(Presets.SCORER_COLLECT);
                 Subsystem.robot.collect_right.setPower(-.3);
             Subsystem.robot.collect_left.setPower(.3);
             targetBasePos = baseScorePos - BackTemp;
             targetBaseAngle = baseScoreAngle;
-            currentBaseAngle = getHeading();
+            currentBaseAngle = getIntegratedHeading();
             if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.3))
             {
                 Subsystem.robot.scorer_collect.setPosition(Presets.SCORER_COLLECT);
@@ -446,9 +462,9 @@ public class Auto2 extends OpMode {
                     targetBasePos = baseScorePos;
                     targetBaseAngle = -90; //baseScoreAngle - tempAngle;
                 }
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 telemetry.addData("angle", targetBaseAngle);
-                if(pinkNavigate.driveToPos(targetBasePos, targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed, .15) && runtime.milliseconds() - markedTime > 2500)
+                if(pinkNavigate.driveToPos(targetBasePos, targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed, .25) && runtime.milliseconds() - markedTime > 2500)
                 {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
@@ -456,6 +472,7 @@ public class Auto2 extends OpMode {
                         stage = stage.STOP_BASE;
                 }
                 break;
+
             case STOP_BASE:
                 pinkNavigate.stopBase();
                 if(runtime.milliseconds() - markedTime > 500) {
@@ -464,14 +481,17 @@ public class Auto2 extends OpMode {
                     markedTime = runtime.milliseconds();
                     stage = stage.MOVE_TO_FOUNDATION;
                 }
-
                 break;
 
             case MOVE_TO_FOUNDATION:
                 targetBasePos = baseScorePos + temp;
-                targetBaseAngle = -90;
-                currentBaseAngle = getHeading();
-                if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.3))
+                if(blueAlliance) {
+                    targetBaseAngle = 90;
+                } else {
+                    targetBaseAngle = -90;
+                }
+                currentBaseAngle = getIntegratedHeading();
+                if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.5))
                 {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
@@ -488,7 +508,7 @@ public class Auto2 extends OpMode {
                     targetBaseAngle = baseScoreAngle - 90;
                     targetBasePos = baseScorePos;
                 }
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 if (pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, .25)) {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
@@ -497,9 +517,9 @@ public class Auto2 extends OpMode {
                 break;
 
             case FORWARD_TO_FOUNDATION:
-                targetBasePos = baseScorePos - 10;
+                targetBasePos = baseScorePos - 13;
                 targetBaseAngle = baseScoreAngle;
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 if (pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, .25)) {
                     Subsystem.robot.right_hook.setPosition(0);
                     Subsystem.robot.left_hook.setPosition(1);
@@ -513,29 +533,32 @@ public class Auto2 extends OpMode {
             case HOOK_AND_SCORE:
                 Subsystem.robot.right_hook.setPosition(0);
                 Subsystem.robot.left_hook.setPosition(1);
+                Subsystem.robot.scorerL_rotate.setPosition(Presets.SCORER_SCORE_POSITION);
+                Subsystem.robot.scorerR_rotate.setPosition(Presets.SCORER_SCORE_POSITION);
+                Subsystem.robot.right_lift.setPower(1);
+                Subsystem.robot.right_lift.setPower(1);
                 pinkNavigate.stopBase();
-                if(runtime.milliseconds() - markedTime > 600) {
+                if(Subsystem.robot.left_lift.getCurrentPosition() > 400 || runtime.milliseconds() - markedTime > 1300) {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
                     markedTime = runtime.milliseconds();
-                    stage = stage.LIFT_UP;
+                    stage = stage.LIFT_DOWN;
                 }
                 break;
 
             case LIFT_UP:
                 Subsystem.robot.right_hook.setPosition(0);
                 Subsystem.robot.left_hook.setPosition(1);
-                targetBasePos = baseScorePos + 20;
+                targetBasePos = baseScorePos + 30;
                 targetBaseAngle = baseScoreAngle;
-                currentBaseAngle = getHeading();
-                Lift.lift_to_position(500);
-                Subsystem.set_motor_powers();
+                currentBaseAngle = getIntegratedHeading();
+                Subsystem.robot.right_lift.setPower(1);
+                Subsystem.robot.right_lift.setPower(1);
                 //Subsystem.set_servo_positions();
                 Subsystem.robot.scorerL_rotate.setPosition(Presets.SCORER_SCORE_POSITION);
                 Subsystem.robot.scorerR_rotate.setPosition(Presets.SCORER_SCORE_POSITION);
                 Subsystem.robot.scorer_collect.setPosition(Presets.SCORER_COLLECT);
-                pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, .25);
-                if (Subsystem.robot.left_lift.getCurrentPosition() > 450 && runtime.milliseconds() - markedTime > 1000) {
+                if (Subsystem.robot.left_lift.getCurrentPosition() > 400 || runtime.milliseconds() - markedTime > 1300) {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
                     markedTime = runtime.milliseconds();
@@ -544,16 +567,17 @@ public class Auto2 extends OpMode {
                 break;
 
             case LIFT_DOWN:
-                targetBasePos = baseScorePos;
+                targetBasePos = baseScorePos + 30;
                 targetBaseAngle = baseScoreAngle;
-                currentBaseAngle = getHeading();
-                Lift.lift_to_position(50);
-//                Subsystem.set_servo_positions();
-                Subsystem.set_motor_powers();
+                currentBaseAngle = getIntegratedHeading();
+                Subsystem.robot.right_lift.setPower(-1);
+                Subsystem.robot.right_lift.setPower(-1);
+//                Lift.lift_to_position(50);
+//                Subsystem.set_servo_positions
                 Subsystem.robot.scorerL_rotate.setPosition(Presets.SCORER_SCORE_POSITION);
                 Subsystem.robot.scorerR_rotate.setPosition(Presets.SCORER_SCORE_POSITION);
                 Subsystem.robot.scorer_collect.setPosition(Presets.SCORER_COLLECT);
-                if(pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, .15) || Subsystem.robot.left_lift.getCurrentPosition() < 100) {
+                if(pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 1) || Subsystem.robot.left_lift.getCurrentPosition() < 70) {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
                     markedTime = runtime.milliseconds();
@@ -566,12 +590,12 @@ public class Auto2 extends OpMode {
             case SCORE:
                 targetBaseAngle = baseScoreAngle;
                 targetBasePos = baseScorePos;
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
 //                Subsystem.set_servo_positions();
                 Subsystem.robot.scorer_collect.setPosition(Presets.SCORER_EJECT);
                 Subsystem.robot.scorerL_rotate.setPosition(Presets.SCORER_SCORE_POSITION);
                 Subsystem.robot.scorerR_rotate.setPosition(Presets.SCORER_SCORE_POSITION);
-                if(pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, .15) && runtime.milliseconds() - markedTime > 1500) {
+                if(pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 1) && runtime.milliseconds() - markedTime > 1500) {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
                     stage = stage.ROTATE_SCORER;
@@ -581,11 +605,19 @@ public class Auto2 extends OpMode {
             case ROTATE_SCORER:
                 targetBaseAngle = baseScoreAngle;
                 targetBasePos = baseScorePos;
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 Subsystem.set_servo_positions();
                 Subsystem.robot.scorerL_rotate.setPosition(Presets.SCORER_STOW);
                 Subsystem.robot.scorerR_rotate.setPosition(Presets.SCORER_STOW);
-                pinkNavigate.stopBase();
+                if(pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 1)) {
+                    if(blueAlliance) {
+                        targetBaseAngle = 270;
+                        baseScoreAngle = 270;
+                    } else {
+                        targetBaseAngle = -270;
+                        baseScoreAngle = -270;
+                    }
+                }
                 if (runtime.milliseconds() - markedTime > 1000) {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
@@ -595,15 +627,8 @@ public class Auto2 extends OpMode {
 
 //            TODO: EasyOpenCV
             case TURN_TO_PARK:
-                currentBaseAngle = getHeading();
-                if (blueAlliance) {
-                    targetBasePos = baseScorePos;
-                    targetBaseAngle = 270;
-                } else {
-                    targetBasePos = baseScorePos;
-                    targetBaseAngle = - 270;
-                }
-                if (pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, .15) && runtime.milliseconds() - markedTime > 500) {
+                pinkNavigate.stopBase();
+                if (runtime.milliseconds() - markedTime > 500) {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
                     stage = stage.PARK;
@@ -611,29 +636,38 @@ public class Auto2 extends OpMode {
                 break;
 
             case PARK:
-                currentBaseAngle = getHeading();
-                targetBasePos = baseScorePos + 70;
-                targetBaseAngle = baseScoreAngle;
-                if (pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, .3)) {
+                currentBaseAngle = getIntegratedHeading();
+                if(blueAlliance) {
+                    targetBasePos = baseScorePos + 89;
+                } else {
+                    targetBasePos = baseScorePos + 52; //93 for Full Auto
+                }
+                if(blueAlliance) {
+                    targetBaseAngle = 270;
+                } else {
+                    targetBaseAngle = -270;
+                }
+                if (pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, .5)) {
                     baseScoreAngle = targetBaseAngle;
                     baseScorePos = targetBasePos;
-                        if (skyLocation == 1) {
-                            stage = stage.SKY4;
-                        } else if (skyLocation == 2) {
-                            stage = stage.SKY5;
-                        } else {
-                            stage = stage.SKY6;
-                        }
+//                        if (skyLocation == 1) {
+//                            stage = stage.SKY4;
+//                        } else if (skyLocation == 2) {
+//                            stage = stage.SKY5;
+//                        } else {
+//                            stage = stage.SKY6;
+//                        }
+                    stage = stage.STOP;
                 }
                 break;
 
             case MOVE_FOUNDATION:
                 Subsystem.robot.right_hook.setPosition(0);
                 Subsystem.robot.left_hook.setPosition(1);
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 targetBasePos = baseScorePos + 25;
                 targetBaseAngle = baseScoreAngle;
-                if (pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, .5)) {
+                if (pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 1)) {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
                     stage = stage.TURN_FOUNDATION;
@@ -643,13 +677,13 @@ public class Auto2 extends OpMode {
             case TURN_FOUNDATION:
                 Subsystem.robot.right_hook.setPosition(0);
                 Subsystem.robot.left_hook.setPosition(1);
-                currentBaseAngle = getHeading();
-                if (blueAlliance) {
+                currentBaseAngle = getIntegratedHeading();
+                if(blueAlliance) {
                     targetBasePos = baseScorePos;
-                    targetBaseAngle = baseScoreAngle + 90;
-                }else {
+                    targetBaseAngle = 270;
+                } else {
                     targetBasePos = baseScorePos;
-                    targetBaseAngle = baseScoreAngle - 90;
+                    targetBaseAngle = -270;
                 }
                 if (pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, .25)) {
                     Subsystem.robot.right_hook.setPosition(1);
@@ -664,7 +698,7 @@ public class Auto2 extends OpMode {
             case MOVE_FOUNDATION2:
                 Subsystem.robot.right_hook.setPosition(0);
                 Subsystem.robot.left_hook.setPosition(1);
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 if (blueAlliance) {
                     targetBasePos = baseScorePos + 8;
                     targetBaseAngle = baseScoreAngle;
@@ -684,7 +718,7 @@ public class Auto2 extends OpMode {
             case TURN_FOUNDATION2:
                 Subsystem.robot.right_hook.setPosition(0);
                 Subsystem.robot.left_hook.setPosition(1);
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 if (blueAlliance) {
                     targetBasePos = baseScorePos;
                     targetBaseAngle = baseScoreAngle + 55;
@@ -704,7 +738,7 @@ public class Auto2 extends OpMode {
             case BACKUP:
                 targetBasePos = baseScorePos - 10;
                 targetBaseAngle = baseScoreAngle;
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.25))
                 {
                     baseScorePos = targetBasePos;
@@ -716,18 +750,23 @@ public class Auto2 extends OpMode {
 
             case STRAFE:
                 if(blueAlliance) {
-                    targetBasePos = baseScorePos - 10;
-                    targetBaseAngle = baseScoreAngle;
-                    temp = 1;
-                    speed = -.3;
+                    if(skyLocation == 1) {
+                        targetBasePos = baseScorePos - 44;
+                    } else if(skyLocation == 2) {
+                        targetBasePos = baseScorePos - 43;
+                    } else {
+                        targetBasePos = baseScorePos - 47;
+                    }
+                    targetBaseAngle = 270;
+                    currentStrafeBasePos = (leftFWheelPos + rightBWheelPos) / 2.0;
                 } else {
-                    targetBasePos = baseScorePos + 10;
-                    targetBaseAngle = baseScoreAngle;
-                    temp = -1;
-                    speed = .3;
+                    targetBasePos = baseScorePos - 15;
+                    targetBaseAngle = -270;
+
+                    currentStrafeBasePos = (leftFWheelPos + rightBWheelPos) / 2.0;
                 }
-                currentBaseAngle = getHeading();
-                if(pinkNavigate.strafeToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.25) || runtime.milliseconds() - markedTime > 1100) {
+                currentBaseAngle = getIntegratedHeading();
+                if(pinkNavigate.strafeToPos(targetBasePos,targetBaseAngle,currentStrafeBasePos,currentBaseAngle,linearBaseSpeed,.3) && runtime.milliseconds() - markedTime > 1700) {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
                     markedTime = runtime.milliseconds();
@@ -738,7 +777,7 @@ public class Auto2 extends OpMode {
             case MIDPARK:
                 targetBaseAngle = baseScoreAngle;
                 targetBasePos = baseScorePos;
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 pinkNavigate.stopBase();
                 Subsystem.robot.scorer_collect.setPosition(Presets.SCORER_EJECT);
                 stage = stage.STOP;
@@ -747,14 +786,14 @@ public class Auto2 extends OpMode {
             case SKY4:
                 if(blueAlliance) {
                     targetBasePos = baseScorePos + 30;
-                    targetBaseAngle = 35;
+                    targetBaseAngle = 318;
                 } else {
                     targetBasePos = baseScorePos + 30;
-                    targetBaseAngle = 35;
+                    targetBaseAngle = -318;
                 }
                 Subsystem.robot.scorerL_rotate.setPosition(Presets.SCORER_STOW);
                 Subsystem.robot.scorerR_rotate.setPosition(Presets.SCORER_STOW);
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 Subsystem.robot.collect_right.setPower(-1);
                 Subsystem.robot.collect_left.setPower(1);
                 if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.25) && runtime.milliseconds() - markedTime > 2000)
@@ -764,22 +803,22 @@ public class Auto2 extends OpMode {
                     Subsystem.robot.collect_right.setPower(0);
                     Subsystem.robot.collect_left.setPower(0);
                     markedTime = runtime.milliseconds();
-                    BackTemp = 30;
+                    BackTemp = 24;
                     markedTime = runtime.milliseconds();
                     stage = stage.BACKUP2;
                 }
                 break;
             case SKY5:
                 if(blueAlliance) {
-                    targetBasePos = baseScorePos + 25;
-                    targetBaseAngle = baseScoreAngle + 20;
+                    targetBasePos = baseScorePos + 27;
+                    targetBaseAngle = 320;
                 } else {
-                    targetBasePos = baseScorePos + 25;
-                    targetBaseAngle = -320;
+                    targetBasePos = baseScorePos + 27;
+                    targetBaseAngle = -327;
                 }
                 Subsystem.robot.scorerL_rotate.setPosition(Presets.SCORER_STOW);
                 Subsystem.robot.scorerR_rotate.setPosition(Presets.SCORER_STOW);
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 Subsystem.robot.collect_right.setPower(-1);
                 Subsystem.robot.collect_left.setPower(1);
                 if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.25) && runtime.milliseconds() - markedTime > 2000)
@@ -800,11 +839,11 @@ public class Auto2 extends OpMode {
                     targetBaseAngle = -345;
                 } else {
                     targetBasePos = baseScorePos + 20;
-                    targetBaseAngle = -345;
+                    targetBaseAngle = -370;
                 }
                 Subsystem.robot.scorerL_rotate.setPosition(Presets.SCORER_STOW);
                 Subsystem.robot.scorerR_rotate.setPosition(Presets.SCORER_STOW);
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 Subsystem.robot.collect_right.setPower(-1);
                 Subsystem.robot.collect_left.setPower(1);
                 if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.15) && runtime.milliseconds() - markedTime > 2000)
@@ -823,8 +862,8 @@ public class Auto2 extends OpMode {
                 Subsystem.robot.collect_right.setPower(-.3);
                 Subsystem.robot.collect_left.setPower(.3);
                 targetBasePos = baseScorePos - BackTemp;
-                targetBaseAngle = baseScoreAngle;
-                currentBaseAngle = getHeading();
+                targetBaseAngle = -315;
+                currentBaseAngle = getIntegratedHeading();
                 if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.3))
                 {
                     Subsystem.robot.scorer_collect.setPosition(Presets.SCORER_COLLECT);
@@ -850,8 +889,8 @@ public class Auto2 extends OpMode {
             case TURN3:
                 targetBasePos = baseScorePos;
                 targetBaseAngle = -270;
-                currentBaseAngle = getHeading();
-                if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.3))
+                currentBaseAngle = getIntegratedHeading();
+                if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.2) && runtime.milliseconds() - markedTime > 2000)
                 {
                     Subsystem.robot.scorer_collect.setPosition(Presets.SCORER_COLLECT);
                     baseScorePos = targetBasePos;
@@ -862,24 +901,95 @@ public class Auto2 extends OpMode {
                 break;
 
             case BRING_CUBE:
-                targetBasePos = baseScorePos - 50;
+                int x = 0;
+                targetBasePos = baseScorePos - 55;
                 targetBaseAngle = -270;
-                currentBaseAngle = getHeading();
-                if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.3))
-                {
+                currentBaseAngle = getIntegratedHeading();
+                if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,1)) {
+                        baseScorePos = targetBasePos;
+                        baseScoreAngle = targetBaseAngle;
+                        markedTime = runtime.milliseconds();
+                        stage = stage.SPIT_CUBE;
+                }
+                break;
+
+            case SPIT_CUBE:
+                targetBasePos = baseScorePos - 25;
+                targetBaseAngle = baseScoreAngle;
+                currentBaseAngle = getIntegratedHeading();
+                Subsystem.robot.right_lift.setPower(1);
+                Subsystem.robot.right_lift.setPower(1);
+                //Subsystem.set_servo_positions();
+                Subsystem.robot.scorerL_rotate.setPosition(.7);
+                Subsystem.robot.scorerR_rotate.setPosition(.7);
+                Subsystem.robot.scorer_collect.setPosition(Presets.SCORER_COLLECT);
+                pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 1);
+                if (Subsystem.robot.left_lift.getCurrentPosition() > 450 || runtime.milliseconds() - markedTime > 2000) {
+                    Subsystem.robot.scorerL_rotate.setPosition(.7);
+                    Subsystem.robot.scorerR_rotate.setPosition(.7);
+                    baseScorePos = targetBasePos;
+                    baseScoreAngle = targetBaseAngle;
+                    markedTime = runtime.milliseconds();
+                    stage = stage.RELEASE_CUBE;
+                }
+                break;
+
+            case RELEASE_CUBE:
+                targetBasePos = baseScorePos;
+                targetBaseAngle = -270;
+                currentBaseAngle = getIntegratedHeading();
+                Subsystem.robot.left_lift.setPower(-1);
+                Subsystem.robot.right_lift.setPower(-1);
+                //Subsystem.set_servo_positions();
+                Subsystem.robot.scorerL_rotate.setPosition(.7);
+                Subsystem.robot.scorerR_rotate.setPosition(.7);
+                Subsystem.robot.scorer_collect.setPosition(Presets.SCORER_EJECT);
+                pinkNavigate.stopBase();
+                if (Subsystem.robot.left_lift.getCurrentPosition() > 100 || runtime.milliseconds() - markedTime > 1000) {
+                    Subsystem.robot.scorerL_rotate.setPosition(.7);
+                    Subsystem.robot.scorerR_rotate.setPosition(.7);
+                    baseScorePos = targetBasePos;
+                    baseScoreAngle = targetBaseAngle;
+                    markedTime = runtime.milliseconds();
+                    stage = stage.PARK2;
+                }
+                break;
+
+            case PARK2:
+                targetBasePos = baseScorePos + 35;
+                targetBaseAngle = -270;
+                currentBaseAngle = getIntegratedHeading();  // Degrees
+                Subsystem.robot.collect_right.setPower(-1);
+                Subsystem.robot.collect_left.setPower(1);
+                Subsystem.robot.scorerL_rotate.setPosition(.7);
+                Subsystem.robot.scorerR_rotate.setPosition(.7);
+                if (pinkNavigate.driveToPos(targetBasePos, targetBaseAngle, currentBasePos, currentBaseAngle, linearBaseSpeed, 0.25)) {
                     baseScorePos = targetBasePos;
                     baseScoreAngle = targetBaseAngle;
                     markedTime = runtime.milliseconds();
                     stage = stage.STOP;
                 }
                 break;
-
+            case BIGBOY_TURNS:
+                targetBasePos = baseScorePos;
+                targetBaseAngle = 10000;
+                currentBaseAngle = getIntegratedHeading();
+                if(pinkNavigate.driveToPos(targetBasePos,targetBaseAngle,currentBasePos,currentBaseAngle,linearBaseSpeed,.5))
+                {
+                    baseScorePos = targetBasePos;
+                    baseScoreAngle = targetBaseAngle;
+                    markedTime = runtime.milliseconds();
+                    stage = stage.SPIT_CUBE;
+                }
+                break;
             case STOP:
+                Subsystem.robot.collect_left.setPower(0);
+                Subsystem.robot.collect_right.setPower(0);
                 Subsystem.robot.right_hook.setPosition(1);
                 Subsystem.robot.left_hook.setPosition(0);
                 targetBaseAngle = baseScoreAngle;
                 targetBasePos = baseScorePos;
-                currentBaseAngle = getHeading();
+                currentBaseAngle = getIntegratedHeading();
                 pinkNavigate.stopBase();
         }
 
@@ -897,6 +1007,7 @@ public class Auto2 extends OpMode {
 
         telemetry.addData("Target Base Angle", targetBaseAngle);
         telemetry.addData("current Base Angle:", currentBaseAngle);
+        telemetry.addData("Linear error", pinkNavigate.getLinearError());
 
 
     }
@@ -911,6 +1022,21 @@ public class Auto2 extends OpMode {
             return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
 
+    private double getIntegratedHeading() {
+        double currentHeading = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        double deltaHeading = currentHeading - previousHeading;
+
+        if (deltaHeading < -180) {
+            deltaHeading += 360;
+        } else if (deltaHeading >= 180) {
+            deltaHeading -= 360;
+        }
+
+        integratedHeading += deltaHeading;
+        previousHeading = currentHeading;
+
+        return integratedHeading;
+    }
 
     public void stop() {
         Subsystem.robot.leftF_drive.setPower(0);

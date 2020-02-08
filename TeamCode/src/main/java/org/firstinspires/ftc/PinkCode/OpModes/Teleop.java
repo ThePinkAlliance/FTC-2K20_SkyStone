@@ -3,6 +3,7 @@ package org.firstinspires.ftc.PinkCode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.PinkCode.Calculations.Presets;
 import org.firstinspires.ftc.PinkCode.Subsystems.Collector;
@@ -45,7 +46,6 @@ public class Teleop extends Controls {
 
     // Code to Run Constantly After the Drivers Press Play and Before They Press Stop
     public void loop() {
-
 
         // Drive Train Control
         if( gamepad1.left_stick_y > .1  ||
@@ -120,10 +120,12 @@ public class Teleop extends Controls {
             Scorer.score_collect(Presets.SCORER_COLLECT);
         else if(tower_left_bumper(false))
             Scorer.score_collect(Presets.SCORER_EJECT);
-        else if(gamepad2.right_trigger > .1 || gamepad2.right_trigger < -.1)
+
+        if(gamepad2.left_trigger > .1 || gamepad2.left_trigger < -.1) {
             Scorer.score_cap(Presets.CAP_EJECT);
-        else if(gamepad2.left_trigger > .1 || gamepad2.left_trigger < -.1)
+        } else {
             Scorer.score_cap(Presets.CAP_STOW);
+        }
 
 
         if(base_y(false))
