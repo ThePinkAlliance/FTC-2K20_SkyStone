@@ -7,7 +7,7 @@ public abstract class Presets {
     public static final double COLLECTOR_EJECT_POWER = -.2; // Power Sent to Motor While Ejecting
 
     // Lift Presets TODO: Confirm Lift Presets
-    public static final double LIFT_MAX_POSITION = 1300; //Fully Raised
+    public static final double LIFT_MAX_POSITION = 2150; //Fully Raised
     public static final double LIFT_CLEAR_POSITION = 500;
     public static final double LIFT_STOW_POSITION = 0; // Lowered Position for Collection from Sort
     static final double LIFT_Kp = .01; // Kp for Lift PD

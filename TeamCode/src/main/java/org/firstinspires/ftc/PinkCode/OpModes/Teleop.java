@@ -133,6 +133,16 @@ public class Teleop extends Controls {
         else if(base_a())
             Hooks.hook_rotate_up_position();
 
+        if(gamepad1.x) {
+            Scorer.sideFlap(0);
+        } else if(gamepad1.b) {
+            Scorer.sideFlap(1);
+        } else if(gamepad1.dpad_up) {
+            Scorer.sideClaw(1);
+        } else if(gamepad1.dpad_down) {
+            Scorer.sideClaw(0);
+        }
+
         // Set Motor Powers and Servos to Their Commands
         Subsystem.set_motor_powers();
         Subsystem.set_servo_positions();

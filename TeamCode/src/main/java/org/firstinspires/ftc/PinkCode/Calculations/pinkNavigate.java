@@ -25,7 +25,13 @@ public class pinkNavigate {
         double motorCmd = PD.getMotorCmd(0.02, 0.07, linearError, linearSpeedInches);
 
         // Determine the baseline motor speed command, but limit it to leave room for the turn offset
-        motorCmd = Range.clip(motorCmd, -0.6, 0.6);
+        if(maxPower == -999) {
+            motorCmd = Range.clip(motorCmd, -0.6, 0.6);
+        } else {
+            motorCmd = Range.clip(motorCmd, -0.6, 0.6);
+            motorCmd = Range.clip(motorCmd, -maxPower, maxPower);
+        }
+
 
         // Determine and add the angle offset
         angleOffset = PD.getMotorCmd(0.02, 0.001, angularError, 0);
@@ -35,8 +41,10 @@ public class pinkNavigate {
         rightFMotorCmd = Range.clip(rightFMotorCmd, -1.0, 1.0);
 
         // Limit the max motor command for gentle motion
-            leftFMotorCmd = Range.clip(leftFMotorCmd, -maxPower, maxPower);
-            rightFMotorCmd = Range.clip(rightFMotorCmd, -maxPower, maxPower);
+        if (maxPower == -999) {
+            leftFMotorCmd = Range.clip(leftFMotorCmd, -.25, .25);
+            rightFMotorCmd = Range.clip(rightFMotorCmd, -.25, .25);
+        }
             leftBMotorCmd = leftFMotorCmd;
             rightBMotorCmd = rightFMotorCmd;
 

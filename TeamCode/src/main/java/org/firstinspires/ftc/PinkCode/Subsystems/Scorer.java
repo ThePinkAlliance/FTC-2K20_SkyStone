@@ -16,4 +16,10 @@ public abstract class Scorer extends Subsystem {
     public static void score_cap(double position) {
         score_cap_position = position;
     }
+    public static void sideClaw(double position) {
+        sideClaw_rotate_pos = position;
+    }
+    public static void sideFlap(double position) {
+        sideFlap_rotate_pos = position;
+    }
 }

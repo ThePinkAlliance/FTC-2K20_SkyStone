@@ -28,6 +28,8 @@ public class Hardware {
     public Servo left_hook;
     public Servo right_hook;
     public Servo cap_hook;
+    public Servo sideClaw;
+    public Servo sideFlap;
 
     // Local OpMode Members
     private HardwareMap hwMap = null;
@@ -104,5 +106,7 @@ public class Hardware {
         right_hook = hwMap.get(Servo.class, "right_hook");
         cap_hook = hwMap.get(Servo.class, "cap_hook");
         cap_hook.setDirection(Servo.Direction.REVERSE);
+        sideClaw = hwMap.get(Servo.class, "side_claw");
+        sideFlap = hwMap.get(Servo.class, "side_flap");
     }
 }
